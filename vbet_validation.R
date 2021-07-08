@@ -40,15 +40,9 @@ observations
 ## I keep getting an error message: object 'slope' not found
 
 observations %>%
-ggplot(mapping = aes(y = slope, color = recorder_id)) +
+ggplot(mapping = aes(x = slope, color = recorder_id)) +
   geom_boxplot() +
-  labs (x = "Slope (degrees)", y = "", color = "Recorder ID") +
-  scale_color_discrete(labels = c("1",
-                                  "2",
-                                  "3",
-                                  "4",
-                                  "5")) +
-  theme_minimal()+
-  theme(legend.position = "bottom")
+  labs (x = "Slope (degrees)") +
+  theme_minimal()
 
-TEST 
+
