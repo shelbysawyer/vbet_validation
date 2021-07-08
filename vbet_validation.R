@@ -66,4 +66,7 @@ ggplot(data = observations,
   geom_histogram(bins = 10) +
   labs (x = "Topographic Wetness Index (TWI)", y = "Count")
 
+## The next thing I want to do is create box plots of the slope values
+## but I want to split the plots out by recorder_id (there are 5)
+
 
