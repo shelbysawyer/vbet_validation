@@ -37,12 +37,33 @@ observations <- dbGetQuery(vbet_validation_db, "SELECT * FROM observations;")
 observations
 
 ## Experimenting with color-coding users in the box plot
-## I keep getting an error message: object 'slope' not found
 
 observations %>%
 ggplot(mapping = aes(x = slope, color = recorder_id)) +
   geom_boxplot() +
   labs (x = "Slope (degrees)") +
   theme_minimal()
+
+# Histogram for Evidence Rasters
+
+ggplot(data = observations, 
+       mapping = aes(x = slope)) +
+  geom_histogram(bins = 10) +
+  labs (x = "Slope (degrees)", y = "Count")
+
+ggplot(data = observations, 
+       mapping = aes(x = hand)) +
+  geom_histogram(bins = 10) +
+  labs (x = "HAND (m)", y = "Count")
+
+ggplot(data = observations, 
+       mapping = aes(x = distance)) +
+  geom_histogram(bins = 10) +
+  labs (x = "Distance from Drainage Cell (m)", y = "Count")
+
+ggplot(data = observations, 
+       mapping = aes(x = twi)) +
+  geom_histogram(bins = 10) +
+  labs (x = "Topographic Wetness Index (TWI)", y = "Count")
 
 
