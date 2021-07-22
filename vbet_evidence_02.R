@@ -8,14 +8,13 @@ library(DBI)
 library(tidyverse)
 library(RSQLite)
 
-#Change data type of userid to factor
+# Change data type of category to factor
 evidence$categoryid = as.factor(evidence$categoryid) 
-#(taking this out since it wasn't working)
 
-# Ignore for now. Creating SQL database
+# Create SQL database
 vbet_evidence_2_db <-dbConnect(RSQLite::SQLite(), "vbet_evidence_02.db")
 
-# Ignore for now. Creating evidence table
+# Create evidence table
 dbExecute(vbet_evidence_2_db, "CREATE TABLE evidence (
           observationid,
           HUC8,
@@ -183,7 +182,33 @@ evidence %>%
   filter(categoryid %in% c(1, 2, 3, 4, 5, 6, 8)) %>%
   ggplot(mapping = aes(y = Slope)) +
   geom_boxplot() +
+  labs (y = "Distance from Nearest Drainage Cell (m)", x = "Valley Bottom")
+
+## Distributions of Non-Valley Bottom values
+# Box plots
+evidence %>%
+  filter(categoryid %in% c(9, 10)) %>%
+  ggplot(mapping = aes(y = Slope)) +
+  geom_boxplot() +
   labs (y = "Slope (degrees)", x = "Valley Bottom")
+
+evidence %>%
+  filter(categoryid %in% c(9, 10)) %>%
+  ggplot(mapping = aes(y = HAND)) +
+  geom_boxplot() +
+  labs (y = "HAND", x = "Valley Bottom")
+
+evidence %>%
+  filter(categoryid %in% c(9, 10)) %>%
+  ggplot(mapping = aes(y = TWI)) +
+  geom_boxplot() +
+  labs (y = "Topographic Wetness Index", x = "Valley Bottom")
+
+evidence %>%
+  filter(categoryid %in% c(9, 10)) %>%
+  ggplot(mapping = aes(y = Slope)) +
+  geom_boxplot() +
+  labs (y = "Distance from Nearest Drainage Cell (m)", x = "Valley Bottom")
 
 # Summary statistics
 
