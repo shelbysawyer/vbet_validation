@@ -197,8 +197,6 @@ evidence %>%
   labs (y = "HAND")
 
 ## Valley Bottom by Small, Medium, Large
-# VB by Small, Med, Large Histograms
-
 evidence %>%
   filter(categoryid %in% c(1, 2, 3, 4, 5, 6, 8)) %>%
   ggplot(mapping = aes(x = Slope, color = InputZone)) +
@@ -213,17 +211,72 @@ evidence %>%
 
 evidence %>%
   filter(categoryid %in% c(1, 2, 3, 4, 5, 6, 8)) %>%
-  ggplot(mapping = aes(x = TWI)) +
-  geom_histogram(binwidth = 1) +
+  ggplot(mapping = aes(x = TWI, color = InputZone)) +
+  geom_histogram() +
   labs (x = "Topographic Wetness Index", y = "Count")
 
 evidence %>%
   filter(categoryid %in% c(1, 2, 3, 4, 5, 6, 8)) %>%
-  ggplot(mapping = aes(x = ChannelDist)) +
+  ggplot(mapping = aes(x = ChannelDist, color = InputZone)) +
   geom_histogram() +
-  labs (x = "Distance from Nearest Drainage Cell (m)", y = "Count")
+  labs (x = "Distance from Nearest Drainage Cell (m)", y = "Count", color = 
+          "Drainage Area Size")
+
+## In-Channel Split by Small, Medium, Large
+evidence %>%
+  filter(categoryid %in% c(1)) %>%
+  ggplot(mapping = aes(x = Slope, color = InputZone)) +
+  geom_histogram(binwidth = 2) +
+  labs (x = "Slope (degrees)", y = "Count", color = "Drainage Area Size")
+
+evidence %>%
+  filter(categoryid %in% c(1)) %>%
+  ggplot(mapping = aes(x = HAND, color = InputZone)) +
+  geom_histogram() +
+  labs (y = "Count", x = "HAND", color = "Drainage Area Size")
+
+evidence %>%
+  filter(categoryid %in% c(1)) %>%
+  ggplot(mapping = aes(x = TWI, color = InputZone)) +
+  geom_histogram() +
+  labs (x = "Topographic Wetness Index", y = "Count")
+
+evidence %>%
+  filter(categoryid %in% c(1)) %>%
+  ggplot(mapping = aes(x = ChannelDist, color = InputZone)) +
+  geom_histogram() +
+  labs (x = "Distance from Nearest Drainage Cell (m)", y = "Count", color = 
+          "Drainage Area Size") +
+  xlim(NA,100)
+
+# Non-Valley Bottom by Small, Medium, Large
+evidence %>%
+  filter(categoryid %in% c(9,10)) %>%
+  ggplot(mapping = aes(x = Slope, color = InputZone)) +
+  geom_histogram(binwidth = 2) +
+  labs (x = "Slope (degrees)", y = "Count", color = "Drainage Area Size")
+
+evidence %>%
+  filter(categoryid %in% c(9,10)) %>%
+  ggplot(mapping = aes(x = HAND, color = InputZone)) +
+  geom_histogram() +
+  labs (y = "Count", x = "HAND", color = "Drainage Area Size")
+
+evidence %>%
+  filter(categoryid %in% c(9,10)) %>%
+  ggplot(mapping = aes(x = TWI, color = InputZone)) +
+  geom_histogram() +
+  labs (x = "Topographic Wetness Index", y = "Count")
+
+evidence %>%
+  filter(categoryid %in% c(9,10)) %>%
+  ggplot(mapping = aes(x = ChannelDist, color = InputZone)) +
+  geom_histogram(binwidth = 10) +
+  labs (x = "Distance from Nearest Drainage Cell (m)", y = "Count", color = 
+          "Drainage Area Size")
 
 
+#############################
 #############################
 evidence %>%
   ggplot(mapping = aes(x = Slope)) +
@@ -276,7 +329,31 @@ evidence %>%
   theme_minimal() +
   theme(legend.position = "right")
 
+# Summary statistics
 
+max(evidence$Slope)
+min(evidence$Slope)
+mean(evidence$Slope)
+mode(evidence$Slope)
+median(evidence$Slope)
+
+max(evidence$HAND)
+min(evidence$HAND)
+mean(evidence$HAND)
+mode(evidence$HAND)
+median(evidence$HAND)
+
+max(evidence$ChannelDist)
+min(evidence$ChannelDist)
+mean(evidence$ChannelDist)
+mode(evidence$ChannelDist)
+median(evidence$ChannelDist)
+
+max(evidence$TWI)
+min(evidence$TWI)
+mean(evidence$TWI)
+mode(evidence$TWI)
+median(evidence$TWI)
 
 ## Distributions of Non-Valley Bottom values
 # Box plots
