@@ -116,9 +116,9 @@ evidence %>%
 
 evidence %>%
   filter(categoryid %in% c(1, 2, 3, 4, 5, 6, 8)) %>%
-  ggplot(mapping = aes(y = Slope)) +
+  ggplot(mapping = aes(y = ChannelDist)) +
   geom_boxplot() +
-  labs (y = "Distance from Nearest Drainage Cell (m)", x = "Valley Bottom")
+  labs (y = "Distance from Nearest Drainage Cell (m)")
 
 # Valley Bottom - Histograms
 evidence %>%
@@ -143,6 +143,58 @@ evidence %>%
   filter(categoryid %in% c(1, 2, 3, 4, 5, 6, 8)) %>%
   ggplot(mapping = aes(x = ChannelDist)) +
   geom_histogram() +
+  labs (x = "Distance from Nearest Drainage Cell (m)", y = "Count")
+
+## Distributions - Non - Valley Bottom Observations
+# Non - Valley Bottom - Box plots
+evidence %>%
+  filter(categoryid %in% c(9, 10)) %>%
+  ggplot(mapping = aes(y = Slope)) +
+  geom_boxplot() +
+  labs (y = "Slope (degrees)", x = "Valley Bottom")
+
+# Problem here.. 
+evidence %>%
+  filter(categoryid %in% c(9, 10)) %>%
+  ggplot(mapping = aes(y = HAND)) +
+  geom_boxplot() +
+  labs (y = "HAND", x = "Valley Bottom")
+
+evidence %>%
+  filter(categoryid %in% c(9, 10)) %>%
+  ggplot(mapping = aes(y = TWI)) +
+  geom_boxplot() +
+  labs (y = "Topographic Wetness Index", x = "Valley Bottom")
+
+evidence %>%
+  filter(categoryid %in% c(9, 10)) %>%
+  ggplot(mapping = aes(y = ChannelDist)) +
+  geom_boxplot() +
+  labs (y = "Distance from Nearest Drainage Cell (m)", x = "Valley Bottom")
+
+# Non-Valley Bottom - Histograms
+evidence %>%
+  filter(categoryid %in% c(9, 10)) %>%
+  ggplot(mapping = aes(x = Slope)) +
+  geom_histogram(binwidth = 1) +
+  labs (x = "Slope (degrees)", y = "Count")
+
+evidence %>%
+  filter(categoryid %in% c(9, 10)) %>%
+  ggplot(mapping = aes(x = HAND)) +
+  geom_histogram() +
+  labs (y = "Count", x = "HAND")
+
+evidence %>%
+  filter(categoryid %in% c(9, 10)) %>%
+  ggplot(mapping = aes(x = TWI)) +
+  geom_histogram(binwidth = 1) +
+  labs (x = "Topographic Wetness Index", y = "Count")
+
+evidence %>%
+  filter(categoryid %in% c(9, 10)) %>%
+  ggplot(mapping = aes(x = ChannelDist)) +
+  geom_histogram(binwidth = 20) +
   labs (x = "Distance from Nearest Drainage Cell (m)", y = "Count")
 
 ## In-Channel Observations
@@ -278,6 +330,22 @@ evidence %>%
 
 #############################
 #############################
+# Test zone
+# This is valley bottom slope values
+
+evidence %>%
+  filter(categoryid %in% c(1, 2, 3, 4, 5, 6, 8)) %>%
+  ggplot(mapping = aes(x = Slope, color = InputZone)) +
+  geom_histogram(bins = 30, fill = "white", alpha = 0.5, 
+                 position = "identity") +
+  labs (x = "Slope (degrees)", y = "Count", color = "Drainage Area Size",
+        title = "Slope Values")
+
+################################
+################################
+Ignore below this point
+################################
+################################
 evidence %>%
   ggplot(mapping = aes(x = Slope)) +
   geom_histogram() +
