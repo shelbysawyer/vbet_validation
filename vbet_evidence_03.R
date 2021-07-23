@@ -342,24 +342,83 @@ evidence %>%
   ggplot(mapping = aes(x = TWI, color = InputZone)) +
   geom_histogram(binwidth = 1, fill = "white", alpha = 0.5, 
                  position = "identity") +
-  labs (x = "Slope (degrees)", y = "Count", color = "Drainage Area Size",
-        title = "Active Valley Bottom TWI Values")
+  labs (x = "Topographic Wetness Index", y = "Count", 
+        color = "Drainage Area Size", title = "Active Valley Bottom TWI Values")
 
 evidence %>%
   filter(categoryid %in% c(1, 2, 3, 4)) %>%
   ggplot(mapping = aes(x = HAND, color = InputZone)) +
   geom_histogram(binwidth = 1, fill = "white", alpha = 0.5, 
                  position = "identity") +
-  labs (x = "Slope (degrees)", y = "Count", color = "Drainage Area Size",
+  labs (x = "Height Above Nearest Drainage (m)", 
+        y = "Count", color = "Drainage Area Size", 
         title = "Active Valley Bottom HAND Values")
 
 evidence %>%
   filter(categoryid %in% c(1, 2, 3, 4)) %>%
-  ggplot(mapping = aes(x = TWI, color = InputZone)) +
+  ggplot(mapping = aes(x = ChannelDist, color = InputZone)) +
+  geom_histogram(binwidth = 1, fill = "white", alpha = 0.5, 
+                 position = "identity") +
+  labs (x = "Distance from Nearest Drainage Cell (m)", 
+        y = "Count", color = "Drainage Area Size",
+        title = "Active Valley Bottom Channel Distance Values - Raw")
+
+evidence %>%
+  filter(categoryid %in% c(1, 2, 3, 4)) %>%
+  ggplot(mapping = aes(x = ChannelDist, color = InputZone)) +
+  geom_histogram(binwidth = 1, fill = "white", alpha = 0.5, 
+                 position = "identity") +
+  labs (x = "Distance from Nearest Drainage Cell (m)", 
+        y = "Count", color = "Drainage Area Size",
+        title = "Active Valley Bottom Channel Distance Values Limited at 500") +
+  xlim(NA, 500)
+
+# Inactive Valley Bottom
+evidence %>%
+  filter(categoryid %in% c(5, 6, 8)) %>%
+  ggplot(mapping = aes(x = Slope, color = InputZone)) +
   geom_histogram(binwidth = 1, fill = "white", alpha = 0.5, 
                  position = "identity") +
   labs (x = "Slope (degrees)", y = "Count", color = "Drainage Area Size",
-        title = "Active Valley Bottom TWI Values")
+        title = "Inactive Valley Bottom Slope Values - Limited") +
+  xlim(NA,20)
+
+evidence %>%
+  filter(categoryid %in% c(5, 6, 8)) %>%
+  ggplot(mapping = aes(x = TWI, color = InputZone)) +
+  geom_histogram(binwidth = 1, fill = "white", alpha = 0.5, 
+                 position = "identity") +
+  labs (x = "Topographic Wetness Index", y = "Count", 
+        color = "Drainage Area Size", title = "Inactive Valley Bottom TWI Values")
+
+evidence %>%
+  filter(categoryid %in% c(5, 6, 8)) %>%
+  ggplot(mapping = aes(x = HAND, color = InputZone)) +
+  geom_histogram(binwidth = 1, fill = "white", alpha = 0.5, 
+                 position = "identity") +
+  labs (x = "Height Above Nearest Drainage (m)", 
+        y = "Count", color = "Drainage Area Size", 
+        title = "Inactive Valley Bottom HAND Values")
+
+evidence %>%
+  filter(categoryid %in% c(5, 6, 8)) %>%
+  ggplot(mapping = aes(x = ChannelDist, color = InputZone)) +
+  geom_histogram(binwidth = 10, fill = "white", alpha = 0.5, 
+                 position = "identity") +
+  labs (x = "Distance from Nearest Drainage Cell (m)", 
+        y = "Count", color = "Drainage Area Size",
+        title = "Inactive Valley Bottom Channel Distance Values - Raw")
+
+evidence %>%
+  filter(categoryid %in% c(5, 6, 8)) %>%
+  ggplot(mapping = aes(x = ChannelDist, color = InputZone)) +
+  geom_histogram(binwidth = 10, fill = "white", alpha = 0.5, 
+                 position = "identity") +
+  labs (x = "Distance from Nearest Drainage Cell (m)", 
+        y = "Count", color = "Drainage Area Size",
+        title = "Inactive Valley Bottom Channel Distance Values Limited at 500") +
+  xlim(NA, 500)
+
 
 #############################
 #############################
