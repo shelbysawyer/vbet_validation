@@ -1,7 +1,7 @@
 # Load data and packages
 work_dir <- "C:/research/transform_fun/vbet_validation/vbet_validation"
 setwd(work_dir)
-evidence <-read.csv("vbet_evidence_02.csv")
+evidence <-read.csv("vbet_evidence_03.csv")
 
 library(ggplot2)
 library(DBI)
@@ -12,10 +12,10 @@ library(RSQLite)
 evidence$categoryid = as.factor(evidence$categoryid) 
 
 # Create SQL database
-vbet_evidence_2_db <-dbConnect(RSQLite::SQLite(), "vbet_evidence_02.db")
+vbet_evidence_3_db <-dbConnect(RSQLite::SQLite(), "vbet_evidence_03.db")
 
 # Create evidence table
-dbExecute(vbet_evidence_2_db, "CREATE TABLE evidence (
+dbExecute(vbet_evidence_3_db, "CREATE TABLE evidence (
           observationid,
           HUC8,
           categoryid,
@@ -25,6 +25,9 @@ dbExecute(vbet_evidence_2_db, "CREATE TABLE evidence (
           created_date,
           updated_date,
           category_name,
+          StreamOrder,
+          DrainageAreaSqkm,
+          InputZone,
           HAND,
           ChannelDist,
           TWI,
@@ -32,14 +35,14 @@ dbExecute(vbet_evidence_2_db, "CREATE TABLE evidence (
           );")
 
 # Loading csv into 'evidence' table:
-evidence <- read.csv("vbet_evidence_02.csv", stringsAsFactors = FALSE)
+evidence <- read.csv("vbet_evidence_03.csv", stringsAsFactors = FALSE)
 names(evidence)
 
-dbWriteTable(vbet_evidence_2_db, "evidence", evidence, append = TRUE)
+dbWriteTable(vbet_evidence_3_db, "evidence", evidence, append = TRUE)
 
 # Checking to make sure it's reading the data properly
 
-evidence <- dbGetQuery(vbet_evidence_2_db, "SELECT * FROM evidence;")
+evidence <- dbGetQuery(vbet_evidence_3_db, "SELECT * FROM evidence;")
 evidence
 
 ## Distributions - All Observations
@@ -48,22 +51,23 @@ evidence
 ggplot(data = evidence,
        mapping = aes(y = TWI)) +
   geom_boxplot() +
-  labs (y = "Topographic Wetness Index", y = "Count")
+  labs (y = "Topographic Wetness Index")
 
 ggplot(data = evidence,
-       mapping = aes(x = Slope)) +
+       mapping = aes(y = Slope)) +
   geom_boxplot() +
-  labs (x = "Slope (degrees)", y = "Count")
+  labs (y = "Slope (degrees)")
+
+# Hitting an error here too
+ggplot(data = evidence,
+       mapping = aes(y = HAND)) +
+  geom_boxplot() +
+  labs (y = "Height Above Nearest Drainage (m)")
 
 ggplot(data = evidence,
-       mapping = aes(x = HAND)) +
+       mapping = aes(y = ChannelDist)) +
   geom_boxplot() +
-  labs (x = "Height Above Nearest Drainage (m)", y = "Count")
-
-ggplot(data = evidence,
-       mapping = aes(x = ChannelDist)) +
-  geom_boxplot() +
-  labs (x = "Distance from Nearest Drainage Cell (m)", y = "Count")
+  labs (y = "Distance from Nearest Drainage Cell (m)")
 
 # Histograms
 
@@ -74,17 +78,18 @@ ggplot(data = evidence,
 
 ggplot(data = evidence,
        mapping = aes(x = Slope)) +
-  geom_histogram() +
+  geom_histogram(binwidth = 1) +
   labs (x = "Slope (degrees)", y = "Count")
 
+# Hitting an error here with # of bins
 ggplot(data = evidence,
        mapping = aes(x = HAND)) +
-  geom_histogram(bins = 10) +
+  geom_histogram(binwidth = 500) +
   labs (x = "Height Above Nearest Drainage (m)", y = "Count")
 
 ggplot(data = evidence,
        mapping = aes(x = ChannelDist)) +
-  geom_histogram() +
+  geom_histogram(binwidth = 100) +
   labs (x = "Distance from Nearest Drainage Cell (m)", y = "Count")
 
 
@@ -96,6 +101,7 @@ evidence %>%
   geom_boxplot() +
   labs (y = "Slope (degrees)", x = "Valley Bottom")
 
+# Problem here.. 
 evidence %>%
   filter(categoryid %in% c(1, 2, 3, 4, 5, 6, 8)) %>%
   ggplot(mapping = aes(y = HAND)) +
@@ -117,27 +123,27 @@ evidence %>%
 # Valley Bottom - Histograms
 evidence %>%
   filter(categoryid %in% c(1, 2, 3, 4, 5, 6, 8)) %>%
-  ggplot(mapping = aes(y = Slope)) +
-  geom_histogram() +
-  labs (y = "Slope (degrees)", x = "Valley Bottom")
+  ggplot(mapping = aes(x = Slope)) +
+  geom_histogram(binwidth = 1) +
+  labs (x = "Slope (degrees)", y = "Count")
 
 evidence %>%
   filter(categoryid %in% c(1, 2, 3, 4, 5, 6, 8)) %>%
-  ggplot(mapping = aes(y = HAND)) +
+  ggplot(mapping = aes(x = HAND)) +
   geom_histogram() +
-  labs (y = "HAND", x = "Valley Bottom")
+  labs (y = "Count", x = "HAND")
 
 evidence %>%
   filter(categoryid %in% c(1, 2, 3, 4, 5, 6, 8)) %>%
-  ggplot(mapping = aes(y = TWI)) +
-  geom_histogram() +
-  labs (y = "Topographic Wetness Index", x = "Valley Bottom")
+  ggplot(mapping = aes(x = TWI)) +
+  geom_histogram(binwidth = 1) +
+  labs (x = "Topographic Wetness Index", y = "Count")
 
 evidence %>%
   filter(categoryid %in% c(1, 2, 3, 4, 5, 6, 8)) %>%
-  ggplot(mapping = aes(y = ChannelDist)) +
+  ggplot(mapping = aes(x = ChannelDist)) +
   geom_histogram() +
-  labs (y = "Distance from Nearest Drainage Cell (m)", x = "Valley Bottom")
+  labs (x = "Distance from Nearest Drainage Cell (m)", y = "Count")
 
 ## In-Channel Observations
 evidence %>%
@@ -154,17 +160,71 @@ evidence %>%
 
 evidence %>%
   filter(categoryid %in% c(1)) %>%
+  ggplot(mapping = aes(x = ChannelDist)) +
+  geom_histogram(binwidth = 5) +
+  labs (x = "Distance", y = "Count") +
+  xlim(NA, 100)
+  
+evidence %>%
+  filter(categoryid %in% c(1)) %>%
   ggplot(mapping = aes(x = HAND)) +
   geom_histogram(binwidth = 1) +
   labs (x = "HAND", y = "Count")
 
+# Channel box plots
 evidence %>%
   filter(categoryid %in% c(1)) %>%
-  ggplot(mapping = aes(x = Slope)) +
-  geom_histogram() +
-  labs (x = "Slope (degrees)", y = "Count")
+  ggplot(mapping = aes(y = Slope)) +
+  geom_boxplot() +
+  labs (y = "Slope (degrees)")
 
-###
+evidence %>%
+  filter(categoryid %in% c(1)) %>%
+  ggplot(mapping = aes(y = TWI)) +
+  geom_boxplot() +
+  labs (y = "TWI")
+
+evidence %>%
+  filter(categoryid %in% c(1)) %>%
+  ggplot(mapping = aes(y = ChannelDist)) +
+  geom_boxplot() +
+  labs (y = "Distance")
+
+evidence %>%
+  filter(categoryid %in% c(1)) %>%
+  ggplot(mapping = aes(y = HAND)) +
+  geom_boxplot() +
+  labs (y = "HAND")
+
+## Valley Bottom by Small, Medium, Large
+# VB by Small, Med, Large Histograms
+
+evidence %>%
+  filter(categoryid %in% c(1, 2, 3, 4, 5, 6, 8)) %>%
+  ggplot(mapping = aes(x = Slope, color = InputZone)) +
+  geom_histogram(binwidth = 2) +
+  labs (x = "Slope (degrees)", y = "Count", color = "Drainage Area Size")
+
+evidence %>%
+  filter(categoryid %in% c(1, 2, 3, 4, 5, 6, 8)) %>%
+  ggplot(mapping = aes(x = HAND, color = InputZone)) +
+  geom_histogram() +
+  labs (y = "Count", x = "HAND", color = "Drainage Area Size")
+
+evidence %>%
+  filter(categoryid %in% c(1, 2, 3, 4, 5, 6, 8)) %>%
+  ggplot(mapping = aes(x = TWI)) +
+  geom_histogram(binwidth = 1) +
+  labs (x = "Topographic Wetness Index", y = "Count")
+
+evidence %>%
+  filter(categoryid %in% c(1, 2, 3, 4, 5, 6, 8)) %>%
+  ggplot(mapping = aes(x = ChannelDist)) +
+  geom_histogram() +
+  labs (x = "Distance from Nearest Drainage Cell (m)", y = "Count")
+
+
+#############################
 evidence %>%
   ggplot(mapping = aes(x = Slope)) +
   geom_histogram() +
