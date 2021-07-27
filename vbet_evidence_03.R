@@ -3,6 +3,8 @@ work_dir <- "C:/research/transform_fun/vbet_validation/vbet_validation"
 setwd(work_dir)
 evidence <-read.csv("vbet_evidence_03.csv")
 
+install.packages("dplyr")
+library(dplyr)
 library(ggplot2)
 library(DBI)
 library(tidyverse)
@@ -95,11 +97,18 @@ ggplot(data = evidence,
 
 ## Distributions - Valley Bottom Observations
 # Valley Bottom - Box plots
+
 evidence %>%
   filter(categoryid %in% c(1, 2, 3, 4, 5, 6, 8)) %>%
   ggplot(mapping = aes(y = Slope)) +
   geom_boxplot() +
   labs (y = "Slope (degrees)", x = "Valley Bottom")
+
+evidence %>%
+  filter(categoryid %in% c(5)) %>%
+  summary(evidence$Slope)
+
+help(geom_boxplot)
 
 # Problem here.. 
 evidence %>%
@@ -262,7 +271,7 @@ evidence %>%
   labs (y = "Count", x = "HAND", color = "Drainage Area Size")
 
 evidence %>%
-  filter(categoryid %in% c(1, 2, 3, 4, 5, 6, 8)) %>%
+  filter(categoryid %in% c(1, 2, 3, 4, 5, 6)) %>%
   ggplot(mapping = aes(x = TWI, color = InputZone)) +
   geom_histogram() +
   labs (x = "Topographic Wetness Index", y = "Count")
@@ -315,10 +324,23 @@ evidence %>%
   labs (y = "Count", x = "HAND", color = "Drainage Area Size")
 
 evidence %>%
-  filter(categoryid %in% c(9,10)) %>%
+  filter(categoryid %in% c(8, 9,10)) %>%
   ggplot(mapping = aes(x = TWI, color = InputZone)) +
   geom_histogram() +
   labs (x = "Topographic Wetness Index", y = "Count")
+
+evidence %>%
+  filter(categoryid %in% c(8, 9,10)) %>%
+  ggplot(mapping = aes(y = TWI, color = InputZone)) +
+  geom_boxplot() +
+  labs (y = "Topographic Wetness Index", x = "Count")
+
+evidence %>%
+  filter(categoryid %in% c(1, 2, 3, 4, 5, 6)) %>%
+  ggplot(mapping = aes(y = TWI, color = InputZone)) +
+  geom_boxplot() +
+  labs (y = "Topographic Wetness Index", x = "Count")
+
 
 evidence %>%
   filter(categoryid %in% c(9,10)) %>%
@@ -433,6 +455,8 @@ evidence %>%
   labs (x = "Slope (degrees)", y = "Count", color = "Drainage Area Size",
         title = "Active Valley Bottom Slope Values - Limited") +
   xlim(NA,20)
+
+
 
 ################################
 ################################
