@@ -105,7 +105,7 @@ evidence %>%
   labs (y = "Slope (degrees)", x = "Valley Bottom")
 
 evidence %>%
-  filter(categoryid %in% c(5)) %>%
+  filter(categoryid %in% c(1, 2, 3, 4, 5, 6)) %>%
   summary(evidence$Slope)
 
 help(geom_boxplot)
